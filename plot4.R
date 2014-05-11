@@ -1,0 +1,43 @@
+plot4=function(){
+  setwd("C:/Users/David/Dropbox/Coursea/Exploratory Data Analysis")
+  #read data set as data table, sep by ;, missing values are coded as ?, header is included
+  DT=fread("household_power_consumption.txt",sep=";",header=T,
+           na.strings="?")
+  DT=DT[DT$Date=="1/2/2007"|DT$Date=="2/2/2007",]
+  #combine date time variable as one string
+  stringDateTime=paste(DT$Date,DT$Time)
+  #create POSIXlt variable from stringDateTime 
+  x=strptime(stringDateTime,"%d/%m/%Y %H:%M:%S")
+  #generate plot4
+  png("Plot4.png",width=480,height=480)
+  par(mfrow=c(2,2))  
+  plot(x,as.numeric(DT$Global_active_power),
+       type="l",
+       xlab="",
+       ylab="Global Active power")
+  
+  plot(x,as.numeric(DT$Voltage),
+       type="l", col="black",
+       xlab="datetime",
+       ylab="Voltage")
+  
+  plot(x,as.numeric(DT$Sub_metering_1),
+       type="l", col="black",
+       xlab="",
+       ylab="Energy sub metering")
+  points(x,as.numeric(DT$Sub_metering_2),
+         type="l", col="red")
+  points(x,as.numeric(DT$Sub_metering_3),
+         type="l", col="blue")
+  legend("topright",col=c("black","red","blue"),
+         lty=1,bty="n",
+         legend=c("Sub_metering_1","Sub_metering_2",
+                  "Sub_metering_3"))
+  
+  plot(x,as.numeric(DT$Global_reactive_power),
+       type="l", col="black",
+       xlab="datetime",
+       ylab="Global_reactive_power")  
+  
+  dev.off()
+}
